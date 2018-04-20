@@ -121,5 +121,33 @@ api.delete('/:id', authenticate,  (req, res) => {
     });
 });
 
+api.delete('/byName/:name', authenticate,  (req, res) => {
+    Technology.findOne({"name":req.params.name}, (err, technology) => {
+        if (err) {
+            return res.status(500).json({
+                title: 'An error occurred',
+                error: err
+            });
+        }
+        if (!technology) {
+            return res.status(500).json({
+                title: 'No technology Found!'
+            });
+        }
+        technology.remove( (err, result) => {
+            if (err) {
+                return res.status(500).json({
+                    title: 'An error occurred',
+                    error: err
+                });
+            }
+            res.status(200).json({
+                message: 'Deleted!',
+                obj: result
+            });
+        });
+    });
+});
+
   return api;
 }
